@@ -9,6 +9,14 @@ module.exports = class NotionPageProperties {
     this[propName] = prop;
   };
 
+	_updateProperty = (propName, prop) => {
+		if(!this[propName]){
+			this._addProperty(propName, prop);
+			return;
+		}
+		this[propName] = prop;
+	}
+
   _createTitleProperty = (title) => {
     return {
       title: [

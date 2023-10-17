@@ -37,12 +37,19 @@ const handleNewMessage = async function (incomingTextMessage) {
 
     await message.process();
 		console.log('message', message)
-    const notionPage = new NotionPage(message);
-    const notionResponse = await notionPage.createNewPage();
-    notionPage.id = notionResponse.id;
-    notionPage.notionURL = notionResponse.url;
-    messagesHistory.push(notionPage);
-    handleOperationSuccess(incomingTextMessage.chat.id, operations.save);
+		if(message.text === '/update'){
+			console.log('message-hanlder: update');
+			handleOperationSuccess(incomingTextMessage.chat.id, operations.update, true, 'update');
+		}else{
+			console.log('message-hanlder: create');
+			const notionPage = new NotionPage(message);
+			const notionResponse = await notionPage.createNewPage();
+			notionPage.id = notionResponse.id;
+			notionPage.notionURL = notionResponse.url;
+			messagesHistory.push(notionPage);
+			handleOperationSuccess(incomingTextMessage.chat.id, operations.save, true);
+		}
+  
   } catch (error) {
     handleError(error, incomingTextMessage.chat.id);
   }

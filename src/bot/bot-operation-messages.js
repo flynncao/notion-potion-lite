@@ -14,6 +14,11 @@ module.exports = {
     successMessage: 'created page [%s](%s)',
     logSuccessMessage: 'Created a Notion page "%s" at: %s.',
   },
+	update:{
+		logInputMessage: 'Received a new message: %s',
+    successMessage: 'created page [%s](%s)',
+    logSuccessMessage: 'Created a Notion page "%s" at: %s.',
+	},
   rename: {
     logInputMessage: 'Requested to rename the page to %s',
     onClickMessage: 'Enter a new title  or /cancel ',

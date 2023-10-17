@@ -11,42 +11,50 @@ Additionally, if the last message in the message history is saved to a database 
 then the keyboard will also include Add Topic or Add Project, respectively.
 @returns {object} Returns an inline keyboard object.
 */
-const getOperationsKeyboard = function () {
+const getOperationsKeyboard = function (type = 'create') {
   const lastMessage = messagesHistory[messagesHistory.length - 1];
 
-  const buttons = [
-    [
-      { text: '✏️ Rename', callback_data: 'operation#rename' },
-      { text: '➡️ Move', callback_data: 'operation#move' },
-      { text: '📝 Add', callback_data: 'operation#details' },
-    ],
-    [
-      { text: '📤 Unbox', callback_data: 'operation#outbox' },
-      { text: '🗑️ Delete', callback_data: 'operation#delete' },
-      { text: '✅ Done', callback_data: 'operation#done' },
-    ],
-  ];
+	const panels = {
+		create:[
+			[
+				{ text: '✏️ Rename', callback_data: 'operation#rename' },
+				{ text: '➡️ Move', callback_data: 'operation#move' },
+				{ text: '📝 Add', callback_data: 'operation#details' },
+			],
+			[
+				{ text: '📤 Unbox', callback_data: 'operation#outbox' },
+				{ text: '🗑️ Delete', callback_data: 'operation#delete' },
+				{ text: '✅ Done', callback_data: 'operation#done' },
+			]],
+		update:[
+			[{text: '🏕️ Get All Record', callback_data: 'operation#all'}, { text: '✅ Done', callback_data: 'operation#done' } ]
+		]
+	}
+  const buttons = panels[type]
 
-  if (lastMessage.database.hasTopic && lastMessage.database.hasProject) {
-    buttons.push([
-      { text: '🔵 Add Topic', callback_data: 'operation#addTopic' },
-      {
-        text: '💼 Add Project',
-        callback_data: 'operation#addProject',
-      },
-    ]);
-  } else if (lastMessage.database.hasTopic) {
-    buttons.push([
-      { text: '🔵 Add Topic', callback_data: 'operation#addTopic' },
-    ]);
-  } else if (lastMessage.database.hasProject) {
-    buttons.push([
-      {
-        text: '💼 Add Project',
-        callback_data: 'operation#addProject',
-      },
-    ]);
-  }
+	if(lastMessage){
+		if (lastMessage.database.hasTopic && lastMessage.database.hasProject) {
+			buttons.push([
+				{ text: '🔵 Add Topic', callback_data: 'operation#addTopic' },
+				{
+					text: '💼 Add Project',
+					callback_data: 'operation#addProject',
+				},
+			]);
+		} else if (lastMessage.database.hasTopic) {
+			buttons.push([
+				{ text: '🔵 Add Topic', callback_data: 'operation#addTopic' },
+			]);
+		} else if (lastMessage.database.hasProject) {
+			buttons.push([
+				{
+					text: '💼 Add Project',
+					callback_data: 'operation#addProject',
+				},
+			]);
+		}
+	
+	}
 
   const replyMarkup = {
     inline_keyboard: buttons,
