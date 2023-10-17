@@ -36,6 +36,7 @@ const handleNewMessage = async function (incomingTextMessage) {
       : new Message(processedMessage);
 
     await message.process();
+		console.log('message', message)
     const notionPage = new NotionPage(message);
     const notionResponse = await notionPage.createNewPage();
     notionPage.id = notionResponse.id;

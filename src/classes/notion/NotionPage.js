@@ -8,9 +8,12 @@ const notionClient = new Client({ auth: process.env.NOTION_TOKEN });
 module.exports = class NotionPage {
   constructor(message) {
     this.database = message.database;
+		console.log('message.database.id', message.database.id)
     this._setParent(message.database.id);
     this._setIcon(message);
     this._setProperties(message);
+		console.log('message', message);
+		
     if (message.title && message.text) {
       this._setChildren(message);
     }
@@ -63,6 +66,9 @@ module.exports = class NotionPage {
         ? message.website.notionRules
         : null;
     const options = this._prepareOptions(message.url, notionRules);
+		console.log('title', title) // DEV: title: apple
+		console.log('options', options) // DEV: option is empty
+		options.url = 'https://flynncao.xyz/'
     this.properties = new NotionPageProperties(title, options);
   };
 

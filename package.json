@@ -24,7 +24,7 @@
     "chalk": "^4.1.2",
     "dotenv": "^16.0.3",
     "node-html-parser": "^6.1.5",
-    "node-telegram-bot-api": "^0.61.0",
+    "node-telegram-bot-api": "^0.63.0",
     "nodemon": "^2.0.21",
     "sqlite3": "^5.1.6"
   },
