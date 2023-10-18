@@ -8,6 +8,8 @@ const notionClient = new Client({ auth: process.env.NOTION_TOKEN });
 module.exports = class NotionPage {
   constructor(message) {
     this.database = message.database;
+		this.id = null
+		this.notionURL = null
 		console.log('message.database.id', message.database.id) // default database is: stuff
     this._setParent(message.database.id);  
     this._setIcon(message);

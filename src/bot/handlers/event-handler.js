@@ -24,6 +24,7 @@ const {
   handleSelectedTopic,
   handleSelectedProject,
   handleBack,
+	handleGetAllRecord
 } = require('./callback-query-handlers');
 const { checkAuthorization } = require('../middleware');
 const { STATE } = require('../state');
@@ -47,6 +48,7 @@ const handlers = {
       details: handleDetails,
       addTopic: handleAddTopic,
       addProject: handleAddProject,
+			allRecord: handleGetAllRecord,
       //Single Action buttons: These actions are done once the button is clicked
       outbox: handleOutbox,
       delete: handleDelete,

@@ -27,7 +27,7 @@ const getOperationsKeyboard = function (type = 'create') {
 				{ text: '✅ Done', callback_data: 'operation#done' },
 			]],
 		update:[
-			[{text: '🏕️ Get All Record', callback_data: 'operation#all'}, { text: '✅ Done', callback_data: 'operation#done' } ]
+			[{text: '🏕️ Get All Record', callback_data: 'operation#allRecord'}, { text: '✅ Done', callback_data: 'operation#done' } ]
 		]
 	}
   const buttons = panels[type]

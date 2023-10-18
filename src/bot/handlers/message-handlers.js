@@ -18,6 +18,7 @@ const {
   getLastMessage,
   handleOperationSuccess,
 } = require('../utils');
+const {createNewHistoryInDB} = require('../../databases/crud');
 /**
 
 Handles incoming messages by processing them to Notion and sending the result back to the user.
@@ -44,9 +45,18 @@ const handleNewMessage = async function (incomingTextMessage) {
 			console.log('message-hanlder: create');
 			const notionPage = new NotionPage(message);
 			const notionResponse = await notionPage.createNewPage();
+			console.log('message-handler:notionResponse', notionResponse)
 			notionPage.id = notionResponse.id;
 			notionPage.notionURL = notionResponse.url;
+			// TODO: push notionPage to messagesHistory(only exists in the memory)
 			messagesHistory.push(notionPage);
+			// TODO: test message with URL and with @pagename
+			await createNewHistoryInDB({
+				name: message.text, 
+				id: notionPage.id,
+				notionURL: notionPage.notionURL,
+				parent: notionPage.database.name,
+			});
 			handleOperationSuccess(incomingTextMessage.chat.id, operations.save, true);
 		}
   
