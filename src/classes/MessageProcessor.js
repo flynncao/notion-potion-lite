@@ -12,7 +12,6 @@ module.exports = class MessageProcessor {
     const { databases } = data;
     this.database =
       this._findMatchingDatabase(incomingMessage, databases) || databases.stuff;
-			console.log('this.database', this.database)
     this.text = Util.cleanUpTheMessage(this.database.tag, this.text);
 
     this.url = this._extractUrlFromText(this.text);

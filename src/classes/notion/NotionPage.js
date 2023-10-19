@@ -68,9 +68,6 @@ module.exports = class NotionPage {
         ? message.website.notionRules
         : null;
     const options = this._prepareOptions(message.url, notionRules);
-		console.log('title', title) // DEV: title: apple
-		console.log('options', options) // DEV: option is empty
-		// options.url = 'https://flynncao.xyz/'
     this.properties = new NotionPageProperties(title, options);
   };
 

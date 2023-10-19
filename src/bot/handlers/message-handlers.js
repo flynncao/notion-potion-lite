@@ -35,9 +35,8 @@ const handleNewMessage = async function (incomingTextMessage) {
     const message = processedMessage.url
       ? new URLMessage(processedMessage)
       : new Message(processedMessage);
-
     await message.process();
-		console.log('message', message)
+		console.log('m-h:processed message', message)
 		if(message.text === '/update'){
 			console.log('message-hanlder: update');
 			handleOperationSuccess(incomingTextMessage.chat.id, operations.update, true, 'update');
@@ -45,7 +44,6 @@ const handleNewMessage = async function (incomingTextMessage) {
 			console.log('message-hanlder: create');
 			const notionPage = new NotionPage(message);
 			const notionResponse = await notionPage.createNewPage();
-			console.log('message-handler:notionResponse', notionResponse)
 			notionPage.id = notionResponse.id;
 			notionPage.notionURL = notionResponse.url;
 			// TODO: push notionPage to messagesHistory(only exists in the memory)

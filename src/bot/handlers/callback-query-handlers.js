@@ -109,6 +109,25 @@ const handleAddProject = async function (chatId) {
   });
 };
 
+/**
+ * Display all database pages in a list
+ * @param {} chatId 
+ */
+const handleGetAllRecord = async function (chatId) {
+	const { databases } = data;
+	const list = Object.values(databases).map((notionDB) => {
+		return {
+			name: `${notionDB.icon}  ${notionDB.name}`,
+			callbackData: `database#${notionDB.id}`,
+		}
+	})
+
+  bot.sendMessage(chatId, operations.allRecord.onClickMessage, {
+    parse_mode: 'Markdown',
+    reply_markup: getKeyboardFromList(list, 4),
+  });
+}
+
 /*****************************************************************************************************************
  *                                                                                                                *
  *  Data selectors Handlers:                                                                                      *
@@ -146,6 +165,7 @@ const handleSelectedProject = async function (chatId, projectId) {
 };
 
 module.exports = {
+	handleGetAllRecord,
   handleRename,
   handleMove,
   handleDetails,

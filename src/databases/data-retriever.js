@@ -7,7 +7,7 @@ const db = require('./db');
 
 
 /**
- * Retrieves "Notion databases" data from the database
+ * Retrieves specific table from the database
  * Give additional to each row in website table
  * @returns {Promise<object>} - Resolves with an object of database objects.
  */
@@ -49,7 +49,6 @@ const getDatabase = function () {
       query,
 
       (err, row) => {
-				console.log('row', row)
         if (err) {
           reject(err);
         } else {
@@ -57,7 +56,6 @@ const getDatabase = function () {
         }
       },
       (err, n) => {
-				console.log('n', n)
         if (err) {
           reject(err);
         } else {
@@ -68,37 +66,7 @@ const getDatabase = function () {
   });
 };
 
-/**
- * Retrieves Websites data from the database.
- * @param {Object} databases - Object containing all databases.b
- * @returns {Promise<Object>} Promise that resolves to an object containing all the websites.
- */
-// const getWebsites = function (databases) {
-//   return new Promise(function (resolve, reject) {
-//     const websites = {};
-//     const query = `SELECT * FROM websites `;
 
-//     db.each(
-//       query,
-
-//       (err, row) => {				
-//         if (err) {
-//           reject(err);
-//         } else {
-//           websites[row.name] = new Website(row, databases);
-//         }
-//       },
-//       (err, n) => {
-//         if (err) {
-//           reject(err);
-//         } else {
-//           db.close();
-//           resolve(websites);
-//         }
-//       }
-//     );
-//   });
-// };
 
 module.exports = async function () {
 	const databases = await getDatabase();

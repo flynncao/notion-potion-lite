@@ -79,6 +79,13 @@ module.exports = class NotionPageProperties {
     };
   };
 
+
+	_createNumberProperty = (number) => {
+	  return {
+			number: Number(number),
+		};
+	}
+
   _buildOptionalProperties(options) {
     if (options.url) {
       this._addProperty('URL', this._createURLProperty(options.url));

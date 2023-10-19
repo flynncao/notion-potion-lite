@@ -51,6 +51,12 @@ module.exports = {
     successMessage: `Added project`,
     logSuccessMessage: 'Added project',
   },
+	allRecord:{
+		logInputMessage: '',
+		onClickMessage: `Which Table?`,
+		successMessage: ``,
+		logSuccessMessage: '',
+	},
   outbox: {
     logInputMessage: 'Requested to outbox a page.',
     successMessage: 'Page out of inbox!',

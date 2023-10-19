@@ -5,6 +5,8 @@ const { getOperationsKeyboard } = require('./keyboards');
 const messagesHistory = require('./messages-history');
 const { STATE } = require('./state');
 const { handleError } = require('./handlers/error-handlers');
+const databases = require('../databases/store');
+const retrieveData = require('../databases/data-retriever');
 
 /**
 
@@ -20,9 +22,6 @@ const sendSuccessMessage = async function (
   useOperationsKeyboard = true,
 	type
 ) {
-	console.log('process sendSuccessMessage');
-	console.log('replyMessage',replyMessage);
-	
   if (!useOperationsKeyboard) {
     await bot.sendMessage(chatId, replyMessage);
     return;
@@ -52,20 +51,22 @@ const handleOperationSuccess = async function (
 ) {
 	try{
 		let replyMessage = ''
-		console.log('type in handleOperationSuccess', type)
+		let lastMessage = null
+		let pageName = ''
+		let notionURL = ''
+		const lastHistory = await getLastHistory()
 		if(type === 'create'){
-			console.log('util: create');
-			const lastMessage = getLastMessage();
-			const pageName = lastMessage.properties.Name.title[0].text.content;
-			const notionURL = lastMessage.notionURL;
+			lastMessage = getLastMessage();
+			pageName = lastMessage.properties.Name.title[0].text.content;
+			notionURL = lastMessage.notionURL;
 			replyMessage = parse(operation.successMessage, pageName, notionURL);
 		}else if(type === 'update'){
-			console.log('util: update');
-			replyMessage = 'choose an option'
+			pageName = lastHistory.name;
+			notionURL = lastHistory.notionURL;
+			replyMessage = 'Please choose a database to update.'
 		}
-		console.log('util: after process if type is create');
-			await sendSuccessMessage(chatId, replyMessage, useOperationsKeyboard, type);
-		  logSuccess(operation.logSuccessMessage, pageName, notionURL);
+		await sendSuccessMessage(chatId, replyMessage, useOperationsKeyboard, type);
+		logSuccess(operation.logSuccessMessage, pageName, notionURL);
 	}catch(e){
 		handleError(e, chatId)
 	}
@@ -96,6 +97,17 @@ Returns the last message in the messagesHistory array
 @returns {Object} - The last message in the messagesHistory array
 */
 const getLastMessage = () => messagesHistory[messagesHistory.length - 1];
+
+/**
+ * Retrieves Page Creation History data from the SQLITE database
+ */
+const getLastHistory = async() => {
+	await retrieveData();
+	const histories = Object.values(databases.histories);
+	console.log('histories', histories)
+	const lastHistory = histories[histories.length - 1];
+	return lastHistory;
+}
 
 module.exports = {
   handleCancel,
