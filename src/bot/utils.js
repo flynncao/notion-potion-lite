@@ -50,7 +50,7 @@ const handleOperationSuccess = async function (
 	type = 'create'
 ) {
 	try{
-		let replyMessage = ''
+		let replyMessage = 'Stand by...'
 		let lastMessage = null
 		let pageName = ''
 		let notionURL = ''
@@ -60,10 +60,10 @@ const handleOperationSuccess = async function (
 			pageName = lastMessage.properties.Name.title[0].text.content;
 			notionURL = lastMessage.notionURL;
 			replyMessage = parse(operation.successMessage, pageName, notionURL);
-		}else if(type === 'update'){
+		}else if(type === 'help'){
 			pageName = lastHistory.name;
 			notionURL = lastHistory.notionURL;
-			replyMessage = 'Please choose a database to update.'
+			replyMessage = 'What do you want to do next, mate?'
 		}
 		await sendSuccessMessage(chatId, replyMessage, useOperationsKeyboard, type);
 		logSuccess(operation.logSuccessMessage, pageName, notionURL);
@@ -104,7 +104,6 @@ const getLastMessage = () => messagesHistory[messagesHistory.length - 1];
 const getLastHistory = async() => {
 	await retrieveData();
 	const histories = Object.values(databases.histories);
-	console.log('histories', histories)
 	const lastHistory = histories[histories.length - 1];
 	return lastHistory;
 }

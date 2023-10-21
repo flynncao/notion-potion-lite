@@ -8,6 +8,7 @@ const STATE = {
   selecting: 'selecting',
   current: 'waiting',
   lastKeyboardMessage: null,
+	databaseId: null,
 };
 
 module.exports = { STATE };

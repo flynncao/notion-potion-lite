@@ -1,5 +1,5 @@
 const data = require('../../databases/store');
-
+const NotionRow = require('../../classes/notion/NotionRow');
 const { logInput } = require('../../lib/logger');
 const bot = require('../bot');
 const { getKeyboardFromList } = require('../keyboards');
@@ -94,6 +94,7 @@ const handleAddTopic = async function (chatId) {
     reply_markup: getKeyboardFromList(list, 4),
   });
 };
+
 const handleAddProject = async function (chatId) {
   const { databases } = data;
   const topicsList = await databases.Projects.query();
@@ -118,7 +119,7 @@ const handleGetAllRecord = async function (chatId) {
 	const list = Object.values(databases).map((notionDB) => {
 		return {
 			name: `${notionDB.icon}  ${notionDB.name}`,
-			callbackData: `database#${notionDB.id}`,
+			callbackData: `table#${notionDB.id}`,
 		}
 	})
 
@@ -135,6 +136,57 @@ const handleGetAllRecord = async function (chatId) {
  *  a topic or a project                                                                                          *
  *                                                                                                                *
  *****************************************************************************************************************/
+
+const handleSelectedRow = async function (chatId, databaseId) {
+	// Use Anime database as an example
+	try {
+		const notionRow = new NotionRow(databaseId);
+		await notionRow.init()
+		const list = notionRow.getPropertyPlainTextList().map((item) => {
+			return {
+				name: `${item.name} : ${item.value ? item.value : ''}`,
+				callbackData: `property#${item.id}`,
+			};
+		})
+		bot.sendMessage(chatId, operations.property.onClickMessage, {
+			parse_mode: 'Markdown',
+			reply_markup: getKeyboardFromList(list, 1),
+		});
+  } catch (error) {
+    handleError(error, chatId);
+  }
+}
+
+
+
+/**
+ * After selecting the database 
+ * @param {string} chatId 
+ * @param {string} databaseId 
+ */
+const handleSelectedDatabase = async function (chatId, databaseId) {
+	// Use Anime database as an example
+	try {
+		STATE.databaseId = databaseId;
+		const databaseName = 'Anime'
+		const { databases } = data;
+		const queryResponse = await databases[databaseName].query();
+		const list = Object.values(queryResponse.results).map((item) => {
+			if (item.properties && item.properties.Name && item.properties.Name.title && item.properties.Name.title[0] && item.properties.Name.title[0].plain_text) {
+				return {
+					name: item.properties.Name.title[0].plain_text,
+					callbackData: `row#${item.id}`,
+				};
+			}
+		}).filter(item=>item!==undefined)
+		bot.sendMessage(chatId, operations.rows.onClickMessage, {
+			parse_mode: 'Markdown',
+			reply_markup: getKeyboardFromList(list, 4),
+		});
+  } catch (error) {
+    handleError(error, chatId);
+  }
+}
 
 const handleSelectedNewDatabase = async function (chatId, newDatabaseName) {
   const { databases } = data;
@@ -178,4 +230,6 @@ module.exports = {
   handleSelectedTopic,
   handleSelectedProject,
   handleBack,
+	handleSelectedDatabase,
+	handleSelectedRow
 };

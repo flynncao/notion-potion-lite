@@ -78,7 +78,13 @@ module.exports = class NotionDatabase {
     logProgress('querying a notion database');
     return notionClient.databases.query({
       database_id: this.id,
-      filter: this.filter.filter,
+      filter: ()=>{
+				if(this.filter){
+					return this.filter;
+				}else{
+					return null;
+				}
+			}
     });
   };
 };

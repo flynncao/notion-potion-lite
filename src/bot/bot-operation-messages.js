@@ -14,6 +14,11 @@ module.exports = {
     successMessage: 'created page [%s](%s)',
     logSuccessMessage: 'Created a Notion page "%s" at: %s.',
   },
+	help:{
+		logInputMessage: 'Received a new message: %s',
+    successMessage: 'created page [%s](%s)',
+    logSuccessMessage: 'Created a Notion page "%s" at: %s.',
+	},
 	update:{
 		logInputMessage: 'Received a new message: %s',
     successMessage: 'created page [%s](%s)',
@@ -26,6 +31,20 @@ module.exports = {
     successMessage: 'The page is renamed to [%s](%s)',
     logSuccessMessage: 'Renamed a Notion page to %s at %s',
   },
+	rows:{
+		logInputMessage: 'Requested to rename the page to %s',
+    onClickMessage: 'Which row?',
+    onCancelMessage: 'Okay, Will keep that title.',
+    successMessage: 'The page is renamed to [%s](%s)',
+    logSuccessMessage: 'Renamed a Notion page to %s at %s',
+	},
+	property:{
+		logInputMessage: 'Requested to rename the page to %s',
+    onClickMessage: 'Which property?',
+    onCancelMessage: 'Okay, Will keep this value.',
+    successMessage: 'The page is renamed to [%s](%s)',
+    logSuccessMessage: 'Renamed a Notion page to %s at %s',
+	},
   details: {
     logInputMessage: 'Requested to add details: %s',
     onClickMessage: 'Enter the details you want to add to the page  or /cancel',

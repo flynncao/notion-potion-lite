@@ -21,6 +21,8 @@ const {
   handleDelete,
   handleDone,
   handleSelectedNewDatabase,
+	handleSelectedDatabase,
+	handleSelectedRow,
   handleSelectedTopic,
   handleSelectedProject,
   handleBack,
@@ -57,6 +59,8 @@ const handlers = {
     },
     dataSelection: {
       database: handleSelectedNewDatabase,
+			row: handleSelectedRow,
+			table: handleSelectedDatabase,
       topic: handleSelectedTopic,
       project: handleSelectedProject,
     },
@@ -69,6 +73,10 @@ const handlers = {
   },
 };
 
+/**
+ * Read action commands from user selection and call the appropriate query handler
+ * @param {*} callbackQuery 
+ */
 const handleCallBackQuery = async function (callbackQuery) {
   const action = callbackQuery.data.split('#');
   const actionId = action[0];

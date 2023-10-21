@@ -37,11 +37,9 @@ const handleNewMessage = async function (incomingTextMessage) {
       : new Message(processedMessage);
     await message.process();
 		console.log('m-h:processed message', message)
-		if(message.text === '/update'){
-			console.log('message-hanlder: update');
-			handleOperationSuccess(incomingTextMessage.chat.id, operations.update, true, 'update');
+		if(message.text === '/help'){
+			handleOperationSuccess(incomingTextMessage.chat.id, operations.help, true, 'help');
 		}else{
-			console.log('message-hanlder: create');
 			const notionPage = new NotionPage(message);
 			const notionResponse = await notionPage.createNewPage();
 			notionPage.id = notionResponse.id;

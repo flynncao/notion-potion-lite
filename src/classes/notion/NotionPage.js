@@ -10,12 +10,9 @@ module.exports = class NotionPage {
     this.database = message.database;
 		this.id = null
 		this.notionURL = null
-		console.log('message.database.id', message.database.id) // default database is: stuff
     this._setParent(message.database.id);  
     this._setIcon(message);
-    this._setProperties(message);
-		console.log('message', message);
-		
+    this._setProperties(message);		
     if (message.title && message.text) {
       this._setChildren(message);
     }
