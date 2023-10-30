@@ -13,7 +13,6 @@ module.exports = class MessageProcessor {
     this.database =
       this._findMatchingDatabase(incomingMessage, databases) || databases.stuff;
     this.text = Util.cleanUpTheMessage(this.database.tag, this.text);
-
     this.url = this._extractUrlFromText(this.text);
     if (this.url) {
       this.text = Util.cleanUpTheMessage(this.url, this.text);

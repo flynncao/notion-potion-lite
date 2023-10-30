@@ -63,7 +63,7 @@ const handleOperationSuccess = async function (
 		}else if(type === 'help'){
 			pageName = lastHistory.name;
 			notionURL = lastHistory.notionURL;
-			replyMessage = 'What do you want to do next, mate?'
+			replyMessage = 'What do you want to do next?'
 		}
 		await sendSuccessMessage(chatId, replyMessage, useOperationsKeyboard, type);
 		logSuccess(operation.logSuccessMessage, pageName, notionURL);

@@ -8,7 +8,9 @@ let { STATE } = require('../state');
 const operations = require('../bot-operation-messages');
 const { handleError } = require('./error-handlers');
 const { getLastMessage, handleOperationSuccess } = require('../utils');
-
+const {displayNotionRows} = require('../menu');
+const NotionDatabase = require('../../classes/notion/NotionDatabase');
+const store = require('../../databases/store');
 /*****************************************************************************************************************
  *                                                                                                                *
  *  Operations handlers                                                                                           *
@@ -52,6 +54,11 @@ const handleBack = function (chatId) {
 
 // The following  handlers require changing the state
 // because the user will be sending a follow up message
+
+const handleUpdate = function (chatId) {
+  STATE.current = STATE.update;
+  bot.sendMessage(chatId, operations.rename.onClickMessage);
+};
 
 const handleRename = function (chatId) {
   STATE.current = STATE.rename;
@@ -137,15 +144,53 @@ const handleGetAllRecord = async function (chatId) {
  *                                                                                                                *
  *****************************************************************************************************************/
 
+
+
+/**
+ * Callback handler for selecting a row
+ * @param {string} chatId 
+ * @param {string} databaseId 
+ */
+const handleSelectedProperty = async function (chatId, propertyId) {
+	try {
+		console.log('callback query handler: handleSelectedProperty');
+		console.log('chatId', chatId)
+		console.log('propertyId', propertyId)
+		
+		const operation = operations.update;
+		STATE.current = STATE.waiting;
+
+		if (await handleCancel(incomingTextMessage, operation.onCancelMessage))
+			return;
+	
+		logInput(operation.logInputMessage, incomingTextMessage.text);
+	
+		try {
+			await getLastMessage().renamePage(incomingTextMessage.text);
+			handleOperationSuccess(incomingTextMessage.chat.id, operation);
+		} catch (error) {
+			handleError(error, incomingTextMessage.chat.id);
+		}
+  } catch (error) {
+    handleError(error, chatId);
+  }
+}
+
+
+/**
+ * Callback handler for selecting a row
+ * @param {string} chatId 
+ * @param {string} databaseId 
+ */
 const handleSelectedRow = async function (chatId, databaseId) {
-	// Use Anime database as an example
 	try {
 		const notionRow = new NotionRow(databaseId);
 		await notionRow.init()
+		store.activePage =  JSON.parse(JSON.stringify(notionRow))
 		const list = notionRow.getPropertyPlainTextList().map((item) => {
 			return {
 				name: `${item.name} : ${item.value ? item.value : ''}`,
-				callbackData: `property#${item.id}`,
+				callbackData: `operation#update#${item.name}`,
 			};
 		})
 		bot.sendMessage(chatId, operations.property.onClickMessage, {
@@ -160,29 +205,31 @@ const handleSelectedRow = async function (chatId, databaseId) {
 
 
 /**
- * After selecting the database 
+ * After selecting the database or receive a new message with `@databasename` only 
  * @param {string} chatId 
  * @param {string} databaseId 
  */
-const handleSelectedDatabase = async function (chatId, databaseId) {
-	// Use Anime database as an example
+const handleSelectedDatabase = async function (chatId, databaseInfo) {
 	try {
-		STATE.databaseId = databaseId;
-		const databaseName = 'Anime'
-		const { databases } = data;
-		const queryResponse = await databases[databaseName].query();
-		const list = Object.values(queryResponse.results).map((item) => {
-			if (item.properties && item.properties.Name && item.properties.Name.title && item.properties.Name.title[0] && item.properties.Name.title[0].plain_text) {
-				return {
-					name: item.properties.Name.title[0].plain_text,
-					callbackData: `row#${item.id}`,
-				};
+		console.log('databaseInfo', databaseInfo)
+		const isNotionDatabaseInstance = databaseInfo instanceof NotionDatabase
+		STATE.databaseId = isNotionDatabaseInstance ? databaseInfo.id : databaseInfo 
+		let queryResponse = {}
+		if(isNotionDatabaseInstance){
+			queryResponse = await databaseInfo.query()
+		}else{
+			const { databases } = data;
+			function getDatabaseNameById(Id){
+				const databaseIds = {}
+					for(const [k, v] of Object.entries(databases)){
+						databaseIds[v.id] = k
+					}
+					return databaseIds[Id]
 			}
-		}).filter(item=>item!==undefined)
-		bot.sendMessage(chatId, operations.rows.onClickMessage, {
-			parse_mode: 'Markdown',
-			reply_markup: getKeyboardFromList(list, 4),
-		});
+			const databaseName = getDatabaseNameById(databaseInfo)
+			queryResponse = await databases[databaseName].query();
+		}
+		displayNotionRows(chatId, queryResponse)
   } catch (error) {
     handleError(error, chatId);
   }
@@ -219,6 +266,7 @@ const handleSelectedProject = async function (chatId, projectId) {
 module.exports = {
 	handleGetAllRecord,
   handleRename,
+	handleUpdate,
   handleMove,
   handleDetails,
   handleAddTopic,
@@ -231,5 +279,6 @@ module.exports = {
   handleSelectedProject,
   handleBack,
 	handleSelectedDatabase,
-	handleSelectedRow
+	handleSelectedRow,
+	handleSelectedProperty
 };
