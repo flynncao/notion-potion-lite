@@ -4,11 +4,9 @@ const { logSuccess } = require('../lib/logger');
 
 
 const createNewHistoryInDB = function (properties) {
-	console.log('properties', properties)
 	
 	return new Promise(function (resolve, reject) {
 		const query = `insert into histories(name, parent, notionURL, id) values (?, ?, ?, ?)`;
-		console.log('query', query)
 		db.run(
 			query,
 			[

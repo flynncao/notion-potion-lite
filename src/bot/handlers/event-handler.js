@@ -121,7 +121,7 @@ const handleCallBackQuery = async function (callbackQuery) {
  * @param {*} incomingTextMessage 
  */
 const handleMessage = async function (incomingTextMessage) {
-	console.log('STATE.current', STATE.current)
+	console.log('CURRENT STATE:', STATE.current)
   handlers.messageHandlers[STATE.current](incomingTextMessage);
 };
 

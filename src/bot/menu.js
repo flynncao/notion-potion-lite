@@ -1,4 +1,3 @@
-
 /**
  * This module exports functions used to mobilize the keyboard and display the rows of an data primarily gotten from Notion.
  */
@@ -19,6 +18,7 @@ const displayNotionRows = async function (chatId, queryResponse) {
 		parse_mode: 'Markdown',
 		reply_markup: getKeyboardFromList(list, 4),
 	});
+
 }
 
 

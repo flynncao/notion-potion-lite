@@ -153,10 +153,6 @@ const handleGetAllRecord = async function (chatId) {
  */
 const handleSelectedProperty = async function (chatId, propertyId) {
 	try {
-		console.log('callback query handler: handleSelectedProperty');
-		console.log('chatId', chatId)
-		console.log('propertyId', propertyId)
-		
 		const operation = operations.update;
 		STATE.current = STATE.waiting;
 
@@ -197,6 +193,8 @@ const handleSelectedRow = async function (chatId, databaseId) {
 			parse_mode: 'Markdown',
 			reply_markup: getKeyboardFromList(list, 1),
 		});
+
+
   } catch (error) {
     handleError(error, chatId);
   }

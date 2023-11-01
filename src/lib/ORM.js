@@ -1,8 +1,7 @@
 /**
  * Object-Relation-Mapping of Notion API
  */
-
-
+const R = require('remeda')
 /**
  * Get property using label to infer id
  * https://github.com/makenotion/notion-sdk-js/issues/391#issuecomment-1474119103
@@ -31,7 +30,7 @@ function getPropertyUsingLabelToInferId(properties, value, label) {
 function getPropertyRawValue(property) {
 	const type = property.type
 	if(type === 'rich_text' || type === 'title'){
-		return property[property.type][0].plain_text
+		return R.isEmpty(property[property.type]) ? '' : property[property.type][0].plain_text
 	}else if(type === 'text'){
 		return property.text.content
 	}
@@ -39,7 +38,7 @@ function getPropertyRawValue(property) {
 		const formula_type = property[type].type
 		return property.formula[formula_type]
 	}else if(type === 'multi_select'){
-		return property[type].map(item=>item.name).join(', ')
+		return R.isEmpty(property[type]) ? '' : property[type].map(item=>item.name).join(', ')
 	}else if(type === 'select'){
 		return property.select.name
 	}else if(type === 'date'){

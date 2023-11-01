@@ -7,6 +7,7 @@ const STATE = {
   details: 'details',
   selecting: 'selecting',
   current: 'waiting',
+	update:'updating',
   lastKeyboardMessage: null,
 	databaseId: null,
 };

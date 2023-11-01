@@ -64,6 +64,11 @@ const handleOperationSuccess = async function (
 			pageName = lastHistory.name;
 			notionURL = lastHistory.notionURL;
 			replyMessage = 'What do you want to do next?'
+		}else if(type === 'update'){
+			// TODO: refactror: manage the operation success based on types specified
+			propertyName = databases.activePropertyName;
+			propertyValue = databases.propertyValue
+			replyMessage = `Successfully updated ${propertyName} to ${propertyValue}!`
 		}
 		await sendSuccessMessage(chatId, replyMessage, useOperationsKeyboard, type);
 		logSuccess(operation.logSuccessMessage, pageName, notionURL);

@@ -26,6 +26,7 @@
     "node-html-parser": "^6.1.5",
     "node-telegram-bot-api": "^0.63.0",
     "nodemon": "^2.0.21",
+    "remeda": "^1.28.0",
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {

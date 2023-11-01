@@ -42,11 +42,9 @@ const handleNewMessage = async function (incomingTextMessage) {
       ? new URLMessage(processedMessage)
       : new Message(processedMessage);
     await message.process();
-		console.log('m-h:processed message', message)
 		if(message.text === '/help'){
 			handleOperationSuccess(incomingTextMessage.chat.id, operations.help, true, 'help');
 		}else{
-			console.log('message.text', message.text);
 	
 			if(message.text === ''){
 				// TODO: refactor: use callback function
@@ -93,7 +91,7 @@ const handleRenameMessage = async function (incomingTextMessage) {
 
 
 const handleUpdateMessage = async function (incomingTextMessage) {
-  const operation = operations.rename;
+  const operation = operations.update;
   STATE.current = STATE.waiting;
 
   if (await handleCancel(incomingTextMessage, operation.onCancelMessage))
@@ -104,18 +102,14 @@ const handleUpdateMessage = async function (incomingTextMessage) {
   try {
 		// urgent refactor: do not call notion API directly
 		const {activePage, activePropertyName} = store
-		console.log('activePropertyName', activePropertyName)
 		const pageId = activePage.id
 		const key = activePage.properties[activePropertyName].type
-		console.log('key', key)
 		const value = incomingTextMessage.text
-		console.log('value', value)
 		const payload = {
 			page_id: pageId,
 			properties: {
 			},
 		}
-		console.log('payload', payload)
 		payload.properties[activePropertyName] = 	{rich_text: [
 			{
 				text: {
@@ -123,10 +117,11 @@ const handleUpdateMessage = async function (incomingTextMessage) {
 				},
 			},
 		]}
-		notionClient.pages.update(payload);
+		const response = await notionClient.pages.update(payload);
+		store.propertyValue = value
 		// console.log('store.activePage', store.activePage)
     // await store.activePage.updateProperty(incomingTextMessage.text);
-    handleOperationSuccess(incomingTextMessage.chat.id, operation);
+    handleOperationSuccess(incomingTextMessage.chat.id, operation, false, 'update');
   } catch (error) {
     handleError(error, incomingTextMessage.chat.id);
   }

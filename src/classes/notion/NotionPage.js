@@ -80,10 +80,20 @@ module.exports = class NotionPage {
     return notionClient.pages.create(this);
   };
 
+	updateProperty = (property, value) => {
+		console.log('property', property)
+		console.log('value', value)
+		// this.properties._updateProperty(property, value)
+		// return notionClient.pages.update({
+		// 	page_id: this.id,
+		// 	properties:this.properties
+		// });
+	}
+
+
 	updatePage = () => {
 		logProgress('Updating a notion page');
 		this.properties._updateProperty('total', '13')
-		console.log('this.properties', this.properties)
 		return notionClient.pages.update({
 			page_id: this.id,
 			properties:this.properties
